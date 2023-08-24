@@ -1,5 +1,6 @@
 from flask import Flask
 from celery import Celery, Task
+from werkzeug.exceptions import HTTPException
 
 from app.extensions import db, migrate, ma, sess, limiter, mail, bcrypt
 from app.config import BaseConfig, DevelopmentConfig
@@ -33,7 +34,13 @@ def register_blueprints(app: Flask) -> None:
 
 
 def register_error_handlers(app: Flask) -> None:
-    pass
+    @app.errorhandler(HTTPException)
+    def handle_too_many_requests(e: HTTPException):
+        return {
+            'code': e.code,
+            'name': e.name,
+            'description': e.description,
+        }, e.code
 
 
 def celery_init_app(app: Flask) -> Celery:
