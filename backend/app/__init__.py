@@ -5,6 +5,7 @@ from werkzeug.exceptions import HTTPException
 from app.extensions import db, migrate, ma, sess, limiter, mail, bcrypt
 from app.config import BaseConfig, DevelopmentConfig
 from app.auth import auth
+from app.oauth import oauth
 
 
 def create_app(config: BaseConfig = DevelopmentConfig) -> Flask:
@@ -32,6 +33,7 @@ def register_extensions(app: Flask) -> None:
     
 def register_blueprints(app: Flask) -> None:
     app.register_blueprint(auth, url_prefix='/auth')
+    app.register_blueprint(oauth, url_prefix='/oauth')
 
 
 def register_error_handlers(app: Flask) -> None:
