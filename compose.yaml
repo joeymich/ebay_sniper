@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ./compose/local/flask/Dockerfile
+    container_name: backend
+    # '/start' is the shell script used to run the service
+    command: /start
+    # this volume is used to map the files and folders on the host to the container
+    # so if we change code on the host, code in the docker container will also be changed
+    volumes:
+      - ./backend:/app
+    ports:
+      - '5000:5000'
+    environment:
+      - FLASK_DEBUG=1
+      - FLASK_APP=app
+      - DATABASE_URL=postgresql://postgres:postgres@db/postgres
+    env_file:
+      - .env/.dev
+    depends_on:
+      - redis
+      - db
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=postgres
+
+  redis:
+    image: redis:7-alpine
