@@ -1,9 +1,11 @@
 import os
+from pathlib import Path
 
 from redis import Redis
 
 
 r = Redis('redis', 6379)
+BASE_DIR = Path(__file__).parent.parent
 
 
 class BaseConfig():
@@ -17,7 +19,7 @@ class BaseConfig():
     
     # Flask-SQLAlchemy
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'postgresql://postgres:postgres@db/postgres')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', f'sqlite:///{BASE_DIR}/db.sqlite3')
     
     # Celery
     CELERY = dict(

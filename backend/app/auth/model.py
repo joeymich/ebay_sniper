@@ -7,6 +7,8 @@ from app import db
 
 
 class User(db.Model):
+    __tablename__ = 'user'
+    
     # basic user info
     id = Column(String(36), primary_key=True, default=str(uuid.uuid4()), unique=True, index=True)
     email = Column(String(254), unique=True, index=True, nullable=True)
