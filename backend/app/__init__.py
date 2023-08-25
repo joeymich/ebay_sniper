@@ -6,6 +6,7 @@ from app.extensions import db, migrate, ma, sess, limiter, mail, bcrypt
 from app.config import BaseConfig, DevelopmentConfig
 from app.auth import auth
 from app.oauth import oauth
+from app.snipe import snipe
 
 
 def create_app(config: BaseConfig = DevelopmentConfig) -> Flask:
@@ -37,6 +38,7 @@ def register_extensions(app: Flask) -> None:
 def register_blueprints(app: Flask) -> None:
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(oauth, url_prefix='/oauth')
+    app.register_blueprint(snipe, url_prefix='/snipe')
 
 
 def register_error_handlers(app: Flask) -> None:
