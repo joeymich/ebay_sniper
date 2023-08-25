@@ -19,15 +19,44 @@ services:
       - FLASK_APP=app
       - DATABASE_URL=postgresql://postgres:postgres@db/postgres
     env_file:
-      - .env/.dev
+      - .env/dev/.env
     depends_on:
       - redis
       - db
 
   db:
     image: postgres
+    container_name: ebay_db
     environment:
       - POSTGRES_PASSWORD=postgres
 
   redis:
     image: redis:7-alpine
+
+  celery_worker:
+    build:
+      context: ./backend
+      dockerfile: ./compose/local/flask/Dockerfile
+    container_name: celery_worker
+    image: celery_worker
+    command: /start-celeryworker
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env/dev/.env
+    environment:
+      - FLASK_APP=app
+    depends_on:
+      - redis
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    container_name: frontend
+    image: frontend
+    volumes:
+      - ./frontend/src:/react-app/src
+    ports:
+      - 3000:3000
