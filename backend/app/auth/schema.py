@@ -25,4 +25,5 @@ class LogInResponseSchema(ma.Schema):
     created_at = fields.DateTime()
     updated_at = fields.DateTime()
     deleted_at = fields.DateTime()
+    verification_code = fields.String()
     
