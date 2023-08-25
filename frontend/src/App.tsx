@@ -1,9 +1,11 @@
-
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="App">
-      <p>app</p>
+    <div className=''>
+      <Routes>
+        <Route path='/' element={<p>hello world</p>} />
+      </Routes>
     </div>
   );
 }
