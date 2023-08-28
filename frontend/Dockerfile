@@ -1,12 +1,12 @@
-FROM node:alpine AS development
+FROM node:alpine
 
-ENV NODE_ENV development
+WORKDIR /frontend
 
-WORKDIR /react-app
+COPY package.json .
+COPY package-lock.json .
 
-COPY ./package.json /react-app/
-RUN npm install
+RUN npm i
 
 COPY . .
 
-CMD npm start
+CMD ["npm", "start"]
