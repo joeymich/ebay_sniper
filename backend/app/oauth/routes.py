@@ -6,9 +6,13 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 from app.oauth import oauth
+from app.decorators import session_required
+from app.auth.model import User
+from app.extensions import db
 
 
 @oauth.route('/authorize/ebay', methods=['GET'])
+@session_required
 def ebay_authorize_oauth2():
     
     session['oauth2_state'] = secrets.token_urlsafe(16)
@@ -24,13 +28,14 @@ def ebay_authorize_oauth2():
     })
     
     url = provider_data.get('authorize_url') + '?' + qs
-    
+        
     return {
         'url': url,
     }
 
 
 @oauth.route('/callback/ebay', methods=['GET'])
+@session_required
 def ebay_callback_oauth2():
     
     provider_data = current_app.config.get('OAUTH2_PROVIDERS').get('ebay')
@@ -66,6 +71,16 @@ def ebay_callback_oauth2():
         },
     )
     
+    """
+    {
+        'access_token': '',
+        'expires_in': 7200,
+        'refresh_token': '',
+        'refresh_token_expires_in': 47304000,
+        'token_type': 'User Access Token',
+    }
+    """
+    
     if response.status_code != 200:
         return {'error': 'Token url did not return 200.'}
     
@@ -73,6 +88,8 @@ def ebay_callback_oauth2():
     
     if oauth2_token is None:
         return {'error': 'No access_token.'}
+    
+    print(response.json())
     
     refresh_token = response.json().get('refresh_token')
     
@@ -84,13 +101,39 @@ def ebay_callback_oauth2():
         },
     )
     
+    """
+    {
+        'userId': '007IND2xyeBay',
+        'username': 'ebayindividualuser',
+        'accountType': 'INDIVIDUAL',
+        'registrationMarketplaceId': 'EBAY_US',
+        'individualAccount': {
+            'email': 'ebayuser@ebay.com'
+        }
+    }
+    """
+    
     if response.status_code != 200:
         return {'error': 'Use data request did not return 200'}
     
-    email = provider_data.get('userinfo').get('email')(response.json())
+    print(response.json())
+    
+    data = response.json()
+    
+    user = User.query.filter_by(id=session.get('user_id')).first()
+    
+    ebay_user_id = data.get('userId')
+    ebay_username = data.get('username')
+    
+    user.ebay_user_id = ebay_user_id
+    user.ebay_refresh_token = refresh_token
+    user.ebay_username = ebay_username
+    
+    db.session.commit()
+    # email = provider_data.get('userinfo').get('email')(response.json())
     
     # redirect to frontend
-    return redirect('http://localhost:3000/')
+    return redirect('http://localhost:3000/dashboard')
         
 
 @oauth.route('/authorize/google', methods=['GET'])
