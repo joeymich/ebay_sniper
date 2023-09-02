@@ -2,7 +2,7 @@ from flask import Flask
 from celery import Celery, Task
 from werkzeug.exceptions import HTTPException
 
-from app.extensions import db, migrate, ma, sess, limiter, mail, bcrypt
+from app.extensions import db, migrate, ma, sess, limiter, mail, bcrypt, cors
 from app.config import BaseConfig, DevelopmentConfig
 from app.auth import auth
 from app.oauth import oauth
@@ -13,7 +13,7 @@ def create_app(config: BaseConfig = DevelopmentConfig) -> Flask:
     app = Flask(__name__)
     
     app.config.from_object(config)
-    
+        
     register_extensions(app)
     register_blueprints(app)
     register_error_handlers(app)
@@ -33,6 +33,7 @@ def register_extensions(app: Flask) -> None:
     limiter.init_app(app)
     mail.init_app(app)
     bcrypt.init_app(app)
+    cors.init_app(app)
     
     
 def register_blueprints(app: Flask) -> None:

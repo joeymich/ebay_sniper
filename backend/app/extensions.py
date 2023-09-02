@@ -6,6 +6,7 @@ from flask_limiter.util import get_remote_address
 from flask_mail import Mail
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
+from flask_cors import CORS
 
 
 db = SQLAlchemy()
@@ -15,3 +16,4 @@ sess = Session()
 limiter = Limiter(key_func=get_remote_address)
 mail = Mail()
 bcrypt = Bcrypt()
+cors = CORS(supports_credentials=True)
