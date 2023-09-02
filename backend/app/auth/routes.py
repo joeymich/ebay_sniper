@@ -5,18 +5,14 @@ from datetime import datetime, timedelta
 from flask import session
 from werkzeug.exceptions import Conflict, Unauthorized
 
-from app.utils import validate_request_body
+from app.utils import validate_request_body, generate_otc
+from app.decorators import session_required
 from app.extensions import bcrypt, db
 from app.auth import auth
 from app.auth.model import User
 from app.auth.schema import SignUpRequestSchema, SignUpResponseSchema, LogInRequestSchema, LogInResponseSchema
-from app.decorators import session_required
-
+from app.snipe.schema import SnipeSchema
 from app.tasks import send_verification_email
-
-
-def generate_otc(n: int = 6) -> str:
-    return ''.join([str(math.floor(random.random() * 10)) for i in range(n)])
 
 
 @auth.route('/signup', methods=['POST'])
@@ -101,16 +97,20 @@ def user():
     user_id = session.get('user_id')
     user = User.query.filter_by(id=user_id).first()
     return {
+        'id': user.id,
         'email': user.email,
         'created_at': user.created_at,
         'email_verified': user.email_verified,
+        'ebay_user_id': user.ebay_user_id,
+        'ebay_refresh_token': user.ebay_refresh_token,
+        'snipes': SnipeSchema(many=True).dump(user.snipes)
     }
 
 
-@auth.route('/verify/<token>')
+@auth.route('/verify/<token>', methods=['POST'])
 @session_required
 def confirm(token):
-    # token 6 digit code
+
     user_id = session.get('user_id')
     user = User.query.filter_by(id=user_id).first()
     
