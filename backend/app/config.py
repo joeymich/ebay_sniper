@@ -11,11 +11,15 @@ BASE_DIR = Path(__file__).parent.parent
 class BaseConfig():
     
     SECRET_KEY = os.environ.get('SECRET_KEY', 'super-secret')
+    
+    SESSION_COOKIE_SAMESITE = 'None'
     SESSION_COOKIE_SECURE = True
     
     # Flask-Session
     SESSION_TYPE = 'redis'
     SESSION_REDIS = r
+    SESSION_PERMANENT = False
+    SESSION_USE_SIGNER = True
     
     # Flask-SQLAlchemy
     SQLALCHEMY_TRACK_MODIFICATIONS = False
