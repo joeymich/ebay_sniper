@@ -22,6 +22,7 @@ const example_snipes: ISnipe[] = [
         bid_count: 9,
         seller: 'raygb5',
         seller_feedback: 8,
+        ending_at: '2023-09-05T02:46:00.399261'
         // images: [
         //     'https://i.ebayimg.com/images/g/0jIAAOSwa1Nk5~Ag/s-l1600.jpg',
         // ],

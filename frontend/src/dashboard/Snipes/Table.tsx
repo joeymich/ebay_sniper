@@ -42,6 +42,7 @@ export const SnipeTable = ({ snipes, handleAdd, handleEdit, handleDelete }: ISni
                                 <th className='p-3 text-sm font-semibold tracking-wide text-left'>Max Bid</th>
                                 <th className='p-3 text-sm font-semibold tracking-wide text-left'>Current Bid</th>
                                 <th className='p-3 text-sm font-semibold tracking-wide text-left'># Bids</th>
+                                <th className='p-3 text-sm font-semibold tracking-wide text-left'>Ending At</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -95,6 +96,7 @@ export const SnipeTable = ({ snipes, handleAdd, handleEdit, handleDelete }: ISni
                                     <td className='p-3 text-sm text-gray-700'>{formatter.format(snipe.max_bid / 100)}</td>
                                     <td className='p-3 text-sm text-gray-700'>{formatter.format(snipe.current_bid / 100)}</td>
                                     <td className='p-3 text-sm text-gray-700'>{snipe.bid_count}</td>
+                                    <td className='p-3 text-sm text-gray-700'>{snipe.ending_at}</td>
                                     <td className='p-5'>
                                         <div className='flex flew-row items-center'>
                                             <button

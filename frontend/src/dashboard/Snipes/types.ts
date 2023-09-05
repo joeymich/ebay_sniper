@@ -10,4 +10,5 @@ export interface ISnipe {
     bid_count: number;
     seller: string;
     seller_feedback: number;
+    ending_at: string;
 }
