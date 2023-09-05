@@ -69,6 +69,9 @@ export const Add = ({ openAdd, setOpenAdd, getSnipes }: any) => {
 
     const handleCloseAdd = () => {
         setOpenAdd(false);
+        setEbayItemNumber('');
+        setBid('');
+        setOffset('7');
     }
 
     return (
