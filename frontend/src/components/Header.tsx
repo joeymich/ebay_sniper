@@ -1,12 +1,15 @@
+import { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 export function Header() {
+    const { user, setUser } = useContext(AuthContext);
     return (
         <nav
-            className='bg-red-100'
+            className=''
         >
             <div
-                className='bg-blue-100 max-w-7xl m-auto flex items-center gap-8 justify-between py-4 px-4'
+                className='max-w-7xl m-auto flex items-center gap-8 justify-between py-4 px-4'
             >
                 <div
                     className='flex items-center gap-4'
@@ -29,22 +32,32 @@ export function Header() {
                         Contact
                     </NavLink>
                 </div>
-                <div
-                    className='flex items-center gap-4'
-                >
+                {user ? (
                     <NavLink
-                        to={'/login'}
-                        className='font-medium text-sm text-black px-4 py-2 rounded-lg hover:opacity-90'
-                    >
-                        Log In
-                    </NavLink>
-                    <NavLink
-                        to={'/signup'}
+                        to={'/dashboard'}
                         className='font-medium text-sm text-white bg-black px-4 py-2 rounded-lg hover:opacity-90'
                     >
-                        Sign Up
+                        Dashboard
                     </NavLink>
-                </div>
+                ) : (
+                    <div
+                        className='flex gap-4'
+                    >
+
+                        <NavLink
+                            to={'/login'}
+                            className='font-medium text-sm text-black px-4 py-2 rounded-lg hover:opacity-90'
+                        >
+                            Log In
+                        </NavLink>
+                        <NavLink
+                            to={'/signup'}
+                            className='font-medium text-sm text-white bg-black px-4 py-2 rounded-lg hover:opacity-90'
+                        >
+                            Sign Up
+                        </NavLink>
+                    </div>
+                )}
             </div>
         </nav>
     )
