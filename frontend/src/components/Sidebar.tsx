@@ -75,9 +75,17 @@ export function Sidebar({ children }: ISidebar) {
                         </div>
                     </div>
                     <div
-                        className='flex items-center p-2 font-medium rounded-md cursor-pointer transition-colors group hover:bg-indigo-50 text-gray-600'
+                        className='relative flex items-center p-2 font-medium rounded-md cursor-pointer transition-colors group hover:bg-indigo-50 text-gray-600'
+                        onClick={() => {
+                            console.log('log out');
+                        }}
                     >
                         <FiLogOut size={28} />
+                        <div
+                            className={`absolute left-full rounded-md px-2 py-1 ml-6 bg-indigo-50 text-indigo-800 text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}
+                        >
+                            Logout
+                        </div>
                     </div>
 
                 </div>
