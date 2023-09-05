@@ -6,6 +6,7 @@ from app.extensions import db
 from . import snipe
 from .model import Snipe
 from .schema import SnipeSchema
+from ..ebay import scrape_listing
 
 
 @snipe.route('/', methods=['GET'])
@@ -14,7 +15,7 @@ def get():
     
     user_id = session.get('user_id')
     
-    snipes = Snipe.query.filter(Snipe.user_id == user_id)
+    snipes = Snipe.query.filter(Snipe.user_id == user_id).order_by(Snipe.created_at)
     
     return SnipeSchema(many=True).dump(snipes)
 
@@ -24,6 +25,12 @@ def get():
 def post():
     
     data = validate_request_body(SnipeSchema())
+    
+    ebay_item_number = data.get('ebay_item_number')
+    ebay_data = scrape_listing(ebay_item_number)
+    print(ebay_data)
+    
+    data = data | ebay_data
     
     user_id = session.get('user_id')
     
@@ -52,4 +59,11 @@ def delete(id):
 
 @snipe.route('/<id>', methods=['PUT'])
 def put(id):
-    pass
+    data = validate_request_body(SnipeSchema())
+    snipe = Snipe.query.get(id)
+    print(snipe)
+    if not snipe:
+        return []
+    snipe.update(data)
+    db.session.commit()
+    return SnipeSchema().dump(snipe)
