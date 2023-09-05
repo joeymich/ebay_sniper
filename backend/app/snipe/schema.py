@@ -11,6 +11,7 @@ class SnipeSchema(ma.Schema):
     offset = fields.Integer()
     status = fields.String()
     
+    image_url = fields.String()
     ebay_item_number = fields.String()
     title = fields.String()
     seller = fields.String()

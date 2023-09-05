@@ -19,6 +19,8 @@ class Snipe(db.Model):
     status = Column(String(255), nullable=True, default='SCHEDULED')
     
     # Listing data
+    image_url = Column(String)
+    
     ebay_item_number = Column(String(255), nullable=True)
     title = Column(String(255))
     
@@ -46,6 +48,12 @@ class Snipe(db.Model):
     
     # def __init__(self):
     #     print('creating snipe')
+    
+    
+    def update(self, changes):
+        for key, val in changes.items():
+            setattr(self, key, val)
+        return self
         
         
     def __del__(self):
