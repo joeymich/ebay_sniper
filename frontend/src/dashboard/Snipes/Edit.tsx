@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { api } from '../../api/api';
+import { SnipeAPI } from '../../api/SnipeAPI';
 
 interface IOffset {
     value: string;
@@ -44,16 +46,28 @@ interface EditProps {
     openEdit: any;
     setOpenEdit: any;
     snipe: any;
+    getSnipes: () => {};
 }
 
-export const Edit = ({ openEdit, setOpenEdit, snipe }: EditProps) => {
+export const Edit = ({ openEdit, setOpenEdit, snipe, getSnipes }: EditProps) => {
     const [ebayItemNumber, setEbayItemNumber] = useState<string>('');
     const [bid, setBid] = useState<string>('');
     const [offset, setOffset] = useState<string>('7');
 
     const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('handle add')
+        const maxBid = parseFloat(bid) * 100;
+        console.log('handle add');
+        const data = await SnipeAPI.put(snipe.id, {
+            max_bid: maxBid,
+            offset: offset,
+        });
+        // const data = await api.put(`/snipe/${snipe.id}`, {
+        //     max_bid: maxBid,
+        //     offset: offset,
+        // });
+        console.log(data);
+        getSnipes();
         handleCloseEdit();
     }
 
@@ -67,7 +81,7 @@ export const Edit = ({ openEdit, setOpenEdit, snipe }: EditProps) => {
     useEffect(() => {
         if (snipe) {
             setEbayItemNumber(snipe.ebay_item_number);
-            setBid(snipe.max_bid);
+            setBid((snipe.max_bid / 100).toString());
             setOffset(snipe.offset);
         }
     }, [snipe])

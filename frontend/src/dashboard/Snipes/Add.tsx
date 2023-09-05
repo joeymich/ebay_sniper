@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import httpClient from '../../httpClient';
+import { SnipeAPI } from '../../api/SnipeAPI';
 
 interface IOffset {
     value: string;
@@ -41,7 +41,7 @@ const offsets: IOffset[] = [
     },
 ]
 
-export const Add = ({ openAdd, setOpenAdd }: any) => {
+export const Add = ({ openAdd, setOpenAdd, getSnipes }: any) => {
     const [ebayItemNumber, setEbayItemNumber] = useState<string>('');
     const [bid, setBid] = useState<string>('');
     const [offset, setOffset] = useState<string>('7');
@@ -52,8 +52,15 @@ export const Add = ({ openAdd, setOpenAdd }: any) => {
         e.preventDefault();
         try {
             console.log('handle add')
-
+            const maxBid = parseFloat(bid) * 100;
+            const data = await SnipeAPI.post({
+                ebay_item_number: ebayItemNumber,
+                max_bid: maxBid,
+                offset: offset,
+            })
+            console.log(data);
             console.log(`${ebayItemNumber} - ${bid} - ${offset}`)
+            getSnipes();
         } catch (e: any) {
             console.error(e);
         }

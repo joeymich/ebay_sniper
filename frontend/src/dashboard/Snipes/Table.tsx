@@ -1,17 +1,7 @@
 import { FiEdit, FiCopy, FiTrash2, FiPlus } from 'react-icons/fi';
+import { formatter } from '../../utils/formatter';
 
-interface ISnipe {
-    max_bid: string;
-    title: string;
-    ebay_item_number: number;
-    offset: number;
-    status: string;
-    current_bid: string;
-    bid_count: number;
-    seller: string;
-    seller_feedback: number;
-    images: string[];
-}
+import { ISnipe } from './types';
 
 interface ISnipeTable {
     snipes: ISnipe[];
@@ -58,14 +48,14 @@ export const SnipeTable = ({ snipes, handleAdd, handleEdit, handleDelete }: ISni
                         <tbody className='divide-y rounded-b-md'>
                             {snipes.map((snipe) => (
                                 <tr
-                                    key={snipe.ebay_item_number}
+                                    key={snipe.id}
                                     className='bg-white rounded-b-md'
                                 >
                                     {/* <td className='pl-8 pr-6'>
                                         <input type='checkbox' className='text-indigo-600 cursor-pointer w-5 h-5 border rounded border-gray-400 focus:ring-transparent' />
                                     </td> */}
                                     <td className='p-5 text-sm text-gray-700'>
-                                        <img className='object-cover h-20 w-20 rounded' src={snipe.images[0]} />
+                                        <img className='object-cover h-20 w-20 rounded' src={snipe.image_url} />
                                     </td>
                                     <td className='p-3 text-sm text-gray-700'>
                                         <a
@@ -77,15 +67,33 @@ export const SnipeTable = ({ snipes, handleAdd, handleEdit, handleDelete }: ISni
                                         </a>
                                     </td>
                                     <td className='p-3 text-sm text-gray-700'>{snipe.title}</td>
-                                    <td className='p-3 text-sm text-gray-700'>{snipe.seller} ({snipe.seller_feedback})</td>
+                                    <td className='p-3 text-sm text-gray-700'>
+                                        <a
+                                            href={`https://www.ebay.com/usr/${snipe.seller}`}
+                                            target='_blank'
+                                            className='text-blue-500 hover:underline'
+                                        >
+                                            {snipe.seller}
+                                        </a>
+                                        <span> </span>
+                                        (
+                                        <a
+                                            href={`https://www.ebay.com/fdbk/feedback_profile/${snipe.seller}`}
+                                            target='_blank'
+                                            className='text-blue-500 hover:underline'
+                                        >
+                                            {snipe.seller_feedback}
+                                        </a>
+                                        )
+                                    </td>
                                     <td className='p-3 text-sm text-gray-700'>{snipe.offset}</td>
                                     <td className='p-3 text-sm text-gray-700'>
                                         <span className='bg-orange-100 p-2 rounded-md'>
                                             {snipe.status}
                                         </span>
                                     </td>
-                                    <td className='p-3 text-sm text-gray-700'>{snipe.max_bid}</td>
-                                    <td className='p-3 text-sm text-gray-700'>{snipe.current_bid}</td>
+                                    <td className='p-3 text-sm text-gray-700'>{formatter.format(snipe.max_bid / 100)}</td>
+                                    <td className='p-3 text-sm text-gray-700'>{formatter.format(snipe.current_bid / 100)}</td>
                                     <td className='p-3 text-sm text-gray-700'>{snipe.bid_count}</td>
                                     <td className='p-5'>
                                         <div className='flex flew-row items-center'>
@@ -96,7 +104,7 @@ export const SnipeTable = ({ snipes, handleAdd, handleEdit, handleDelete }: ISni
                                                 <FiEdit size={20} />
                                             </button>
                                             <button
-                                                onClick={handleDelete}
+                                                onClick={() => handleDelete(snipe)}
                                                 className='p-2 bg-gray-100 hover:bg-gray-200 rounded-md text-red-600'
                                             >
                                                 <FiTrash2 size={20} />
@@ -110,7 +118,7 @@ export const SnipeTable = ({ snipes, handleAdd, handleEdit, handleDelete }: ISni
                 </div>
                 <div className="grid grid-cols-1 gap-4 lg:hidden">
                     {snipes.map((snipe) => (
-                        <div key={snipe.ebay_item_number} className='bg-white space-y-3 p-4 rounded-lg shadow'>
+                        <div key={snipe.id} className='bg-white space-y-3 p-4 rounded-lg shadow'>
                             <div className='flex items-center space-x-2 text-sm'>
                                 <div>
                                     <a href='#' className='text-blue-500 font-bold hover:underline'>{snipe.ebay_item_number}</a>

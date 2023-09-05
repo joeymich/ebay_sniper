@@ -1,30 +1,21 @@
 import React from 'react';
-
-interface ISnipe {
-    max_bid: string;
-    title: string;
-    ebay_item_number: number;
-    offset: number;
-    status: string;
-    current_bid: string;
-    bid_count: number;
-    seller: string;
-    seller_feedback: number;
-    images: string[];
-}
+import { SnipeAPI } from '../../api/SnipeAPI';
 
 interface Props {
     openDelete: boolean;
     setOpenDelete: React.Dispatch<React.SetStateAction<boolean>>;
-    snipe: ISnipe | undefined;
+    snipe: any;
+    getSnipes: () => {};
 }
 
-export const Delete = ({ openDelete, setOpenDelete, snipe }: Props) => {
+export const Delete = ({ openDelete, setOpenDelete, snipe, getSnipes }: Props) => {
     const handleCloseDelete = () => {
         setOpenDelete(false);
     }
-    const handleDelete = () => {
-        console.log('delete')
+    const handleDelete = async () => {
+        const data = await SnipeAPI.delete(snipe.id);
+        console.log(data);
+        getSnipes();
         setOpenDelete(false);
     }
     return (
