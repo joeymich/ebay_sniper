@@ -1,5 +1,5 @@
 import { FaEbay, } from 'react-icons/fa';
-import httpClient from '../httpClient'
+import { api } from '../api/api';
 
 interface Redirect {
     url: string;
@@ -7,7 +7,7 @@ interface Redirect {
 
 export function Account() {
     const handleEbayOAuth = async () => {
-        const resp = await httpClient.get<Redirect>('oauth/authorize/ebay')
+        const resp = await api.get<Redirect>('oauth/authorize/ebay')
         window.location.href = resp.data.url;
     }
     return (
@@ -23,7 +23,7 @@ export function Account() {
                 >
                     <FaEbay />
                 </div>
-                Connect to eBay Account
+                Connect eBay Account
             </button>
             <p>eBay Account: {'tcgcardsandlots'}</p>
             <p>Expires: </p>
