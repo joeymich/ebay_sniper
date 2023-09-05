@@ -22,6 +22,7 @@ class LogInRequestSchema(ma.Schema):
 class LogInResponseSchema(ma.Schema):
     id = fields.String()
     email = fields.String()
+    email_verified = fields.Boolean()
     created_at = fields.DateTime()
     updated_at = fields.DateTime()
     deleted_at = fields.DateTime()
