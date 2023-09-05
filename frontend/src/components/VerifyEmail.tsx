@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { CenteredLayout } from '../layouts/CenteredLayout';
 import { Link } from 'react-router-dom';
 
-import httpClient from '../httpClient';
+import { AuthAPI } from '../api/AuthAPI';
+
+// import httpClient from '../httpClient';
 
 
 export function VerifyEmail() {
@@ -15,8 +17,9 @@ export function VerifyEmail() {
         try {
             e.preventDefault();
             setVerificationCode('');
-            const resp = await httpClient.post(`/auth/verify/${verificationCode}`)
-            const data = await resp.data;
+            // const resp = await httpClient.post(`/auth/verify/${verificationCode}`)
+            const data = await AuthAPI.verify(verificationCode);
+            // const data = await resp.data;
             console.log(data);
         } catch (e: any) {
             if (e.response.status == 401)
@@ -28,8 +31,9 @@ export function VerifyEmail() {
     const handleResendCode = async () => {
         console.log('resend code')
         try {
-            const resp = await httpClient.get('/auth/resend');
-            const data = await resp.data;
+            // const resp = await httpClient.get('/auth/resend');
+            // const data = await resp.data;
+            const data = await AuthAPI.resend();
             console.log(data);
         } catch (e: any) {
             if (e.response.status == 401)

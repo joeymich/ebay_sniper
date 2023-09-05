@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import {
     FcGoogle,
 } from 'react-icons/fc';
@@ -7,12 +8,18 @@ import {
     FaEyeSlash,
 } from 'react-icons/fa';
 import { useState } from 'react';
-import httpClient from '../httpClient'
 import { Link } from 'react-router-dom';
 import { CenteredLayout } from '../layouts/CenteredLayout'
+import { AuthContext } from '../context/AuthContext';
+import { User } from '../context/AuthContext';
+
+import { AuthAPI } from '../api/AuthAPI';
+import { useAuth } from '../hooks/useAuth';
 
 
 export function Login() {
+    const { setUser } = useAuth();
+
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -22,14 +29,21 @@ export function Login() {
 
             try {
                 e.preventDefault()
-                const resp = await httpClient.post('/auth/login', {
-                    email,
-                    password,
-                });
-                const data = await resp.data;
-                console.log(data)
+                const data: User = await AuthAPI.login(email, password);
+                // const resp = await httpClient.post<any>('/auth/login', {
+                //     email,
+                //     password,
+                // });
+                // const data: User = await resp.data;
+                console.log(data);
+                setUser(data);
+                // setUser({
+                //     id: data.id,
+                //     email: data.email,
+                //     email_verified: data.email_verified,
+                // });
 
-                // window.location.href = '/'
+                // window.location.href = '/';
             } catch (error: any) {
                 if (error.response.status === 401)
                     alert('Invalid Credentials')

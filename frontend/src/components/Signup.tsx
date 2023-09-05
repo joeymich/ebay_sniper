@@ -8,7 +8,7 @@ import {
 import { Link } from 'react-router-dom';
 import { CenteredLayout } from '../layouts/CenteredLayout';
 
-import httpClient from '../httpClient'
+import { AuthAPI } from '../api/AuthAPI';
 // import { Redirect } from '@/app/types';
 
 export function Signup() {
@@ -22,10 +22,8 @@ export function Signup() {
 
         try {
             e.preventDefault()
-            await httpClient.post('/auth/signup', {
-                email,
-                password,
-            });
+            const data = await AuthAPI.signup(email, password);
+            console.log(data);
             window.location.href = '/'
         } catch (error: any) {
             console.log(error)
