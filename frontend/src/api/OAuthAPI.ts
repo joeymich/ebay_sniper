@@ -1,11 +1,12 @@
 import { api } from './api';
 
+interface Redirect {
+    url: string;
+}
+
 export const OAuthAPI = {
-    authorize: async function (email: string, password: string) {
-        const response = await api.post<any>('/auth/signup', {
-            email,
-            password,
-        });
+    authorizeEbay: async function () {
+        const response = await api.post<Redirect>('/oauth/authorize/ebay');
         return response.data;
     },
 };
