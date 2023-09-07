@@ -13,6 +13,7 @@ class User(db.Model):
     # basic user info
     # id = Column(String(36), primary_key=True, default=str(uuid.uuid4()), unique=True, index=True)
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    
     email = Column(String(254), unique=True, index=True, nullable=True)
     password = Column(Text, nullable=True) # no idea how long
     email_verified = Column(Boolean, default=False, nullable=False)
