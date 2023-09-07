@@ -10,7 +10,7 @@ from app.decorators import session_required
 from app.extensions import bcrypt, db
 from app.auth import auth
 from app.auth.model import User
-from app.auth.schema import SignUpRequestSchema, SignUpResponseSchema, LogInRequestSchema, LogInResponseSchema
+from app.auth.schema import SignUpRequestSchema, SignUpResponseSchema, LogInRequestSchema, LogInResponseSchema, UserSchema
 from app.snipe.schema import SnipeSchema
 from app.tasks import send_verification_email
 
@@ -96,15 +96,17 @@ def resend():
 def user():
     user_id = session.get('user_id')
     user = User.query.filter_by(id=user_id).first()
-    return {
-        'id': user.id,
-        'email': user.email,
-        'created_at': user.created_at,
-        'email_verified': user.email_verified,
-        'ebay_user_id': user.ebay_user_id,
-        'ebay_refresh_token': user.ebay_refresh_token,
-        'snipes': SnipeSchema(many=True).dump(user.snipes)
-    }
+    return UserSchema().dump(user)
+    # return {
+    #     'id': user.id,
+    #     'email': user.email,
+    #     'created_at': user.created_at,
+    #     'email_verified': user.email_verified,
+    #     'ebay_user_id': user.ebay_user_id,
+    #     'ebay_username': user.ebay_username,
+    #     'ebay_refresh_token': user.ebay_refresh_token,
+    #     'snipes': SnipeSchema(many=True).dump(user.snipes)
+    # }
 
 
 @auth.route('/verify/<token>', methods=['POST'])
