@@ -51,24 +51,34 @@ class DevelopmentConfig(BaseConfig):
         ebay = dict(
             client_id = os.environ.get('EBAY_CLIENT_ID'),
             client_secret = os.environ.get('EBAY_CLIENT_SECRET'),
-            authorize_url = 'https://auth.sandbox.ebay.com/oauth2/authorize',
-            token_url = 'https://api.sandbox.ebay.com/identity/v1/oauth2/token',
+            authorize_url = 'https://auth.ebay.com/oauth2/authorize',
+            token_url = 'https://api.ebay.com/identity/v1/oauth2/token',
             userinfo = dict(
-                url = 'https://apiz.sandbox.ebay.com/commerce/identity/v1/user',
+                url = 'https://apiz.ebay.com/commerce/identity/v1/user',
                 email = lambda json: json['individualAccount']['email'] if json['accountType'] == 'INDIVIDUAL' else json['businessAccount'],
             ),
+            # authorize_url = 'https://auth.sandbox.ebay.com/oauth2/authorize',
+            # token_url = 'https://api.sandbox.ebay.com/identity/v1/oauth2/token',
+            # userinfo = dict(
+            #     url = 'https://apiz.sandbox.ebay.com/commerce/identity/v1/user',
+            #     email = lambda json: json['individualAccount']['email'] if json['accountType'] == 'INDIVIDUAL' else json['businessAccount'],
+            # ),
             scopes = [
-                # view public data from eBay
                 'https://api.ebay.com/oauth/api_scope',
-                # search and view eBay product catalog information
-                'https://api.ebay.com/oauth/api_scope/commerce.catalog.readonly',
-                # view and manage bidding activities for auctions
-                'https://api.ebay.com/oauth/api_scope/buy.offer.auction',
-                # view a user's basic information, such as username or business account details, from their eBay member account
                 'https://api.ebay.com/oauth/api_scope/commerce.identity.readonly',
-                # view a user's personal email information from their eBay member account
-                'https://api.ebay.com/oauth/api_scope/commerce.identity.email.readonly',
             ],
+            # scopes = [
+            #     # view public data from eBay
+            #     'https://api.ebay.com/oauth/api_scope',
+            #     # search and view eBay product catalog information
+            #     'https://api.ebay.com/oauth/api_scope/commerce.catalog.readonly',
+            #     # view and manage bidding activities for auctions
+            #     'https://api.ebay.com/oauth/api_scope/buy.offer.auction',
+            #     # view a user's basic information, such as username or business account details, from their eBay member account
+            #     'https://api.ebay.com/oauth/api_scope/commerce.identity.readonly',
+            #     # view a user's personal email information from their eBay member account
+            #     'https://api.ebay.com/oauth/api_scope/commerce.identity.email.readonly',
+            # ],
             redirect_uri = os.environ.get('EBAY_REDIRECT_URI'),
         ),
         # Google OAuth 2.0 documentation:
