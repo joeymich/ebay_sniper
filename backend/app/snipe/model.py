@@ -1,9 +1,8 @@
 import uuid
 import datetime
 
-from sqlalchemy import Column, String, DateTime, Integer, UUID, ForeignKey
-from sqlalchemy.orm import Mapper
-from sqlalchemy.engine import Connection
+from sqlalchemy import Column, String, DateTime, Integer, UUID, ForeignKey, Text
+from sqlalchemy.orm import relationship
 
 from app.extensions import db
 from app.tasks import snipe_listing
@@ -19,14 +18,16 @@ class Snipe(db.Model):
     status = Column(String(255), nullable=True, default='SCHEDULED')
     
     # Listing data
-    image_url = Column(String)
+    # image_url = Column(String)
+    
+    description = Column(Text, nullable=True)
     
     ebay_item_number = Column(String(255), nullable=True)
     title = Column(String(255))
     
     seller = Column(String(255))
     seller_feedback = Column(Integer)
-    
+        
     current_bid = Column(Integer)
     bid_count = Column(Integer)
     
@@ -34,11 +35,15 @@ class Snipe(db.Model):
     
     ending_at = Column(DateTime)
     
+    
     # # Celery task id, uuid
     # task_id = Column(String(36))
     
     # Foreign key
     user_id = Column(UUID, ForeignKey('user.id', ondelete='cascade'))
+    
+    image = relationship('Image', uselist=False)
+    images = relationship('Image', backref='owner')
     
     # Time
     created_at = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
@@ -46,19 +51,26 @@ class Snipe(db.Model):
     deleted_at = Column(DateTime)
     
     
-    # def __init__(self):
-    #     print('creating snipe')
-    
-    
     def update(self, changes):
         for key, val in changes.items():
             setattr(self, key, val)
         return self
+
         
         
-    def __del__(self):
-        print('deleting snipe')
-            
+class Image(db.Model):
+    __tablename__ = 'image'
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+
+    url = Column(String, nullable=False)
+    
+    snipe_id = Column(UUID, ForeignKey('snipe.id', ondelete='cascade'))
+    
+    
+# from sqlalchemy.engine import Connection
+# from sqlalchemy.orm import Mapper
+    
     
 # @db.event.listens_for(Snipe, 'after_insert')
 # def create_snipe_task(mapper: Mapper, connection: Connection, target: Snipe) -> None:

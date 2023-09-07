@@ -1,94 +1,34 @@
 import { useState, useEffect } from 'react';
 
-import { api } from '../../api/api';
+import { useAuth } from '../../hooks/useAuth';
+
+import { OAuthAPI } from '../../api/OAuthAPI';
+import { SnipeAPI } from '../../api/SnipeAPI';
 
 import { SnipeTable } from './Table';
 import { Add } from './Add';
 import { Edit } from './Edit';
 import { Delete } from './Delete';
+import { Image } from './Image';
 
 import { ISnipe } from './types';
 
-const example_snipes: ISnipe[] = [
-    {
-        id: '1234',
-        image_url: 'https://i.ebayimg.com/images/g/0jIAAOSwa1Nk5~Ag/s-l1600.jpg',
-        max_bid: 150000,
-        title: 'Size 9 - Jordan 1 Retro x Fragment Design x Travis Scott Low Blue',
-        ebay_item_number: 374899603497,
-        offset: 8,
-        status: 'SCHEDULED',
-        current_bid: 130000,
-        bid_count: 9,
-        seller: 'raygb5',
-        seller_feedback: 8,
-        ending_at: '2023-09-05T02:46:00.399261'
-        // images: [
-        //     'https://i.ebayimg.com/images/g/0jIAAOSwa1Nk5~Ag/s-l1600.jpg',
-        // ],
-    },
-    // {
-    //     max_bid: '$125.00',
-    //     title: 'Lot of 10 50c Barber Silver Half Dollars',
-    //     ebay_item_number: 394834818522,
-    //     offset: 7,
-    //     status: 'SCHEDULED',
-    //     current_bid: '$123.73',
-    //     bid_count: 10,
-    //     seller: 'jcsgold',
-    //     seller_feedback: 47610,
-    //     images: [
-    //         'https://i.ebayimg.com/images/g/aNAAAOSw59Fk5zBL/s-l1600.jpg',
-    //     ],
-    // },
-    // {
-    //     max_bid: '$184.00',
-    //     title: 'Bape Hoodie (Authentinc) (Worn Once)',
-    //     ebay_item_number: 175874981734,
-    //     offset: 7,
-    //     status: 'SCHEDULED',
-    //     current_bid: '$126.00',
-    //     bid_count: 1,
-    //     seller: 'yukha_66',
-    //     seller_feedback: 6,
-    //     images: [
-    //         'https://i.ebayimg.com/images/g/UNgAAOSwdGNk6TXj/s-l500.jpg'
-    //     ],
-    // },
-    // {
-    //     max_bid: '$127.00',
-    //     title: 'Size 12 Adidas Yeezy Boost 350 V2 Low Bred without Box Great Condition',
-    //     ebay_item_number: 166301403660,
-    //     offset: 7,
-    //     status: 'SCHEDULED',
-    //     current_bid: '$152.50',
-    //     bid_count: 2,
-    //     seller: '2014flaks',
-    //     seller_feedback: 26,
-    //     images: [
-    //         'https://i.ebayimg.com/images/g/E4IAAOSw4Dlk64Dm/s-l1600.jpg',
-    //     ],
-    // },
-]
-
-const getInitialState = async () => {
-    const resp = await api.get<ISnipe[]>('/snipe/');
-    const json = resp.data;
-    return json;
-}
-
 export const Snipes = () => {
-    const [snipes, setSnipes] = useState<ISnipe[]>(example_snipes);
+
+    const { isEbayConnected } = useAuth();
+
+    const [snipes, setSnipes] = useState<ISnipe[] | null>(null);
 
     useEffect(() => {
         getSnipes().catch(console.error);
     }, []);
 
     const getSnipes = async () => {
-        const resp = await api.get<ISnipe[]>('/snipe/');
-        const json = resp.data;
-        console.log(json);
-        setSnipes(json);
+        // const resp = await api.get<ISnipe[]>('/snipe/');
+        // const json = resp.data;
+        const data = await SnipeAPI.get();
+        console.log(data);
+        setSnipes(data);
     }
 
     const [snipe, setSnipe] = useState<ISnipe>();
@@ -108,31 +48,61 @@ export const Snipes = () => {
         setOpenDelete(true);
     }
 
+    const [openImage, setOpenImage] = useState<boolean>(false);
+    const handleImage = (snipe: ISnipe) => {
+        setSnipe(snipe);
+        setOpenImage(true);
+    }
+
+    const handleEbayOAuth = async () => {
+        const data = await OAuthAPI.authorizeEbay();
+        window.location.href = data.url;
+    }
+
     return (
-        <div>
-            <SnipeTable
-                snipes={snipes}
-                handleAdd={handleAdd}
-                handleEdit={handleEdit}
-                handleDelete={handleDelete}
-            />
-            <Add
-                openAdd={openAdd}
-                setOpenAdd={setOpenAdd}
-                getSnipes={getSnipes}
-            />
-            <Edit
-                openEdit={openEdit}
-                setOpenEdit={setOpenEdit}
-                snipe={snipe}
-                getSnipes={getSnipes}
-            />
-            <Delete
-                openDelete={openDelete}
-                setOpenDelete={setOpenDelete}
-                snipe={snipe}
-                getSnipes={getSnipes}
-            />
-        </div>
+        <>
+            {isEbayConnected() ? <>
+                <SnipeTable
+                    snipes={snipes}
+                    handleAdd={handleAdd}
+                    handleEdit={handleEdit}
+                    handleDelete={handleDelete}
+                    handleImage={handleImage}
+                />
+                <Add
+                    openAdd={openAdd}
+                    setOpenAdd={setOpenAdd}
+                    getSnipes={getSnipes}
+                />
+                <Edit
+                    openEdit={openEdit}
+                    setOpenEdit={setOpenEdit}
+                    snipe={snipe}
+                    getSnipes={getSnipes}
+                />
+                <Delete
+                    openDelete={openDelete}
+                    setOpenDelete={setOpenDelete}
+                    snipe={snipe}
+                    getSnipes={getSnipes}
+                />
+                <Image
+                    openImage={openImage}
+                    setOpenImage={setOpenImage}
+                    snipe={snipe}
+                />
+            </> : <>
+                <div className='bg-white rounded-xl p-3'>
+                    <h1>Connect your ebay account to get started</h1>
+                    <button
+                        className='flex items-center justify-center bg-white border hover:bg-slate-100 font-bold py-2 px-3 rounded-xl focus:outline-none focus:shadow-outline'
+                        onClick={handleEbayOAuth}
+                    >
+                        Connect eBay Account
+                    </button>
+                </div>
+            </>
+            }
+        </>
     )
 }

@@ -1,6 +1,7 @@
 export interface ISnipe {
     id: string;
-    image_url: string;
+    image: IImage;
+    images: IImage[];
     max_bid: number;
     title: string;
     ebay_item_number: number;
@@ -11,4 +12,9 @@ export interface ISnipe {
     seller: string;
     seller_feedback: number;
     ending_at: string;
+    description: string;
+}
+
+export interface IImage {
+    url: string;
 }
