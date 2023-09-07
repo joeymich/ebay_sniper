@@ -7,8 +7,9 @@ import { VerifyEmail } from '../components/VerifyEmail';
 import { Home } from '../components/Home';
 import { SidebarLayout } from '../layouts/SidebarLayout';
 
-import { Account } from '../dashboard/Account';
+import { Dashboard } from '../dashboard/Dashboard';
 import { Snipes } from '../dashboard/Snipes';
+import { Account } from '../dashboard/Account';
 
 import { AuthContext } from '../context/AuthContext';
 
@@ -25,7 +26,7 @@ export const AppRoutes = () => {
             path: '/dashboard',
             element: <Protected><SidebarLayout /></Protected>,
             children: [
-                { path: '/dashboard', element: <p>Dashboard</p> },
+                { path: '/dashboard', element: <Dashboard /> },
                 { path: '/dashboard/snipes', element: <Snipes />},
                 { path: '/dashboard/bookmarks', element: <p>Bookmarks</p> },
                 { path: '/dashboard/history', element: <p>History</p> },

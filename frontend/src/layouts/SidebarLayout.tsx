@@ -8,18 +8,18 @@ import { PiGavelBold } from 'react-icons/pi';
 
 export const SidebarLayout = () => {
     return (
-        <div className='flex'>
+        <div className='absolute flex w-full h-full '>
             <Sidebar>
                 <SidebarItem to='/dashboard' icon={FiGrid} text='Dashboard' />
                 <SidebarItem to='/dashboard/snipes' icon={PiGavelBold} text='Snipes' />
-                <hr className='mx-3'/>
+                <hr className='mx-3' />
                 <SidebarItem to='/dashboard/bookmarks' icon={FiBookmark} text='Bookmarks' />
-                <SidebarItem to='/dashboard/history' icon={MdHistory} text='History'/>
-                <hr className='mx-3'/>
+                <SidebarItem to='/dashboard/history' icon={MdHistory} text='History' />
+                <hr className='mx-3' />
                 <SidebarItem to='/dashboard/account' icon={FaRegUserCircle} text='Account' />
-                <SidebarItem to='/dashboard/settings' icon={FiSettings} text='Settings'/>
+                <SidebarItem to='/dashboard/settings' icon={FiSettings} text='Settings' />
             </Sidebar>
-            <main className='p-3 w-full bg-gray-100'>
+            <main className='overflow-auto w-full p-3 bg-gray-100'>
                 <Outlet />
             </main>
         </div>

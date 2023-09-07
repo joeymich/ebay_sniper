@@ -7,6 +7,8 @@ import { NavLink } from 'react-router-dom';
 import { useContext, createContext, useState } from 'react';
 
 import { IconType } from 'react-icons/lib';
+import { AuthAPI } from '../api/AuthAPI';
+import { useAuth } from '../hooks/useAuth';
 
 interface ISidebarContext {
     open: boolean;
@@ -24,9 +26,15 @@ interface ISidebar {
 
 export function Sidebar({ children }: ISidebar) {
     const [open, setOpen] = useState<boolean>(false);
+    const { setUser } = useAuth();
+    const handleLogout = async () => {
+        const data = await AuthAPI.logout();
+        setUser(null);
+        console.log(data);
+    }
     return (
         <aside className='h-screen'>
-            <nav className='h-full flex flex-col border-r shadow-sm text-gray-600'>
+            <nav className='h-full flex flex-col border-r shadow-sm text-gray-600 bg-white'>
                 <div className='p-3 flex justify-between items-center'>
                     {/* <img
                         src='https://asset.brandfetch.io/idfGjoDDfo/idGLhETxky.png'
@@ -64,10 +72,7 @@ export function Sidebar({ children }: ISidebar) {
                         className={`${open ? 'w-10 h-10' : 'w-0'} transition-all h-10 rounded-md`}
                     />
                     <div
-                        className={`
-              flex justify-between items-center
-              overflow-hidden transition-all ${open ? 'w-40 ml-3' : 'w-0'}
-          `}
+                        className={`flex justify-between items-center overflow-hidden transition-all ${open ? 'w-40 ml-3' : 'w-0'}`}
                     >
                         <div className='leading-4'>
                             <h4 className='font-semibold'>John Doe</h4>
@@ -76,9 +81,7 @@ export function Sidebar({ children }: ISidebar) {
                     </div>
                     <div
                         className='relative flex items-center p-2 font-medium rounded-md cursor-pointer transition-colors group hover:bg-indigo-50 text-gray-600'
-                        onClick={() => {
-                            console.log('log out');
-                        }}
+                        onClick={handleLogout}
                     >
                         <FiLogOut size={28} />
                         <div
