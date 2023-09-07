@@ -7,6 +7,7 @@ from app.config import BaseConfig, DevelopmentConfig
 from app.auth import auth
 from app.oauth import oauth
 from app.snipe import snipe
+from app.ebay_test import ebay_test
 
 
 def create_app(config: BaseConfig = DevelopmentConfig) -> Flask:
@@ -40,6 +41,7 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(oauth, url_prefix='/oauth')
     app.register_blueprint(snipe, url_prefix='/snipe')
+    app.register_blueprint(ebay_test, url_prefix='/ebay_test')
 
 
 def register_error_handlers(app: Flask) -> None:
