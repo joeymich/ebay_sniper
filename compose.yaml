@@ -26,6 +26,7 @@ services:
 
   db:
     image: postgres
+    restart: always
     container_name: db
     environment:
       - POSTGRES_PASSWORD=postgres
@@ -66,6 +67,12 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
 
 # volumes:
 #   node_modules:
