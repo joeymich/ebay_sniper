@@ -19,8 +19,8 @@ def create_app(config: BaseConfig = DevelopmentConfig) -> Flask:
     register_blueprints(app)
     register_error_handlers(app)
     
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.create_all()
             
     return app
 
@@ -28,7 +28,7 @@ def create_app(config: BaseConfig = DevelopmentConfig) -> Flask:
 def register_extensions(app: Flask) -> None:
     celery_init_app(app)
     db.init_app(app)
-    # migrate.init_app(app, db)
+    migrate.init_app(app, db)
     ma.init_app(app)
     sess.init_app(app)
     limiter.init_app(app)

@@ -1,7 +1,7 @@
 import uuid
 import datetime
 
-from sqlalchemy import Column, Text, String, Boolean, DateTime, UUID
+from sqlalchemy import Column, Text, String, Boolean, DateTime, UUID, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app import db
@@ -36,6 +36,8 @@ class User(db.Model):
     ebay_username = Column(String(255), unique=True) # no idea how long
     ebay_refresh_token = Column(String(255)) # no idea how long
     
+    ebay_accounts = relationship('EbayAccount', backref='owner')
+    
     # snipes
     snipes = relationship('Snipe', backref='owner')
     
@@ -46,4 +48,15 @@ class User(db.Model):
     
     def __repr__(self):
         return f'<User {self.id}'
+    
+    
+class EbayAccount(db.Model):
+    __tablename__ = 'ebay_account'
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    ebay_user_id = Column(String(255))
+    ebay_username = Column(String(255))
+    ebay_refresh_token = Column(String(255))
+    
+    user_id = Column(UUID, ForeignKey('user.id', ondelete='cascade'))
     
