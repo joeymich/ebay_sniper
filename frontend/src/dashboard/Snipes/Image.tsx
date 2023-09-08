@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { SnipeAPI } from '../../api/SnipeAPI';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 
@@ -15,6 +14,7 @@ export const Image = ({ openImage, setOpenImage, snipe }: Props) => {
     const [index, setIndex] = useState<number>(0);
     const handleCloseImage = () => {
         setOpenImage(false);
+        setIndex(0);
     }
     return (
         <>
