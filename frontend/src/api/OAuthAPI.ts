@@ -6,7 +6,7 @@ interface Redirect {
 
 export const OAuthAPI = {
     authorizeEbay: async function () {
-        const response = await api.post<Redirect>('/oauth/authorize/ebay');
+        const response = await api.get<Redirect>('/oauth/authorize/ebay');
         return response.data;
     },
 };
