@@ -5,6 +5,7 @@ services:
     build:
       context: ./backend
       dockerfile: ./compose/local/flask/Dockerfile
+    restart: always
     container_name: backend
     # '/start' is the shell script used to run the service
     command: /start
@@ -33,12 +34,14 @@ services:
 
   redis:
     image: redis:7-alpine
+    restart: always
     container_name: redis
 
   celery_worker:
     build:
       context: ./backend
       dockerfile: ./compose/local/flask/Dockerfile
+    restart: always
     container_name: celery_worker
     image: celery_worker
     command: /start-celeryworker
@@ -54,6 +57,7 @@ services:
 
   frontend:
     image: frontend-i
+    restart: always
     build:
       context: ./frontend
       dockerfile: Dockerfile
