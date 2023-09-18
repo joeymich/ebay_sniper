@@ -66,6 +66,7 @@ class DevelopmentConfig(BaseConfig):
             scopes = [
                 'https://api.ebay.com/oauth/api_scope',
                 'https://api.ebay.com/oauth/api_scope/commerce.identity.readonly',
+                # 'https://api.ebay.com/oauth/api_scope/buy.offer.auction',
             ],
             # scopes = [
             #     # view public data from eBay
