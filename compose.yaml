@@ -64,6 +64,9 @@ services:
     container_name: frontend-c
     volumes:
       - ./frontend/src:/frontend/src
+      - ./frontend/tailwind.config.js:/frontend/tailwind.config.js
+      - ./frontend/tsconfig.json:/frontend/tsconfig.json
+      # - ./frontend/tsconfig.json:/frontend/tsconfig.json
       # - node_modules:/frontend/node_modules
     environment:
       - WATCHPACK_POLLING=true
